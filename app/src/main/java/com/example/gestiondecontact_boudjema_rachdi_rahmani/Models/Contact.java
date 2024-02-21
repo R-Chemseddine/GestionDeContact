@@ -17,6 +17,10 @@ public class Contact {
         this.photoUri = photoUri;
     }
 
+    public Contact() {
+
+    }
+
     public String getId() {
         return id.toString();
     }

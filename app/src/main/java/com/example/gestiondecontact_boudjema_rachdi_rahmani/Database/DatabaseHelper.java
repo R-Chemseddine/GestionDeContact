@@ -8,6 +8,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -67,6 +69,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         return null; // Handle case where contact is not found
+    }
+
+    public List<Contact> getAllContacts() {
+        List<Contact> contactList = new ArrayList<>();
+        // Sélectionnez toute la requête
+        String selectQuery = "SELECT  * FROM " + TABLE_CONTACTS;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // Parcourir toutes les lignes et ajouter à la liste
+        if (cursor.moveToFirst()) {
+            do {
+                Contact contact = new Contact();
+                contact.setId(UUID.fromString(cursor.getString(0)));
+                contact.setName(cursor.getString(1));
+                contact.setAddress(cursor.getString(2));
+                contact.setPhoneNumber(cursor.getString(3));
+                contact.setPhotoUri(cursor.getString(4));
+                // Ajout du contact à la liste
+                contactList.add(contact);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return contactList;
     }
 
 }
